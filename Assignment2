@@ -1,0 +1,112 @@
+#import the file
+train <- read_csv("train.csv")
+View(train)
+
+#fix all of the N/As in Age column to zero
+train$Age[is.na(train$Age)] = 0
+
+#find mean, min and max of age 
+mean(train$Age)
+min(train$Age)
+max(train$Age)
+
+#find mean, min and max of age for non-fixed N/As data
+mean(train$Age, na.rm=TRUE)
+min(train$Age, na.rm=TRUE)
+max(train$Age, na.rm=TRUE)
+
+#create histogram of age
+hist(train$Age)
+
+#create histogram of age with added parameters
+hist(train$Age,
+     main="Titanic Passenger's Age",
+     xlab="Age",
+     xlim=c(0,100),
+     col="darkmagenta",
+     ylab="Number of passenger",)
+
+#create bar chart of sex with added parameters
+barplot(table(as.factor(train$Sex)),
+     main="Titanic Passenger's Sex",
+     xlab="Sex",
+     col="yellow",
+     ylim=c(0,700),
+     ylab="Number of passenger",)
+
+#Find the survived
+survived = train[train$Survived == 1,]
+
+#Find who did not survive
+notsurvive = train[train$Survived == 0,]
+
+
+#create survival bar chart of sex with added parameters
+barplot(table(as.factor(survived$Sex)),
+        main="Survived Titanic Passenger",
+        xlab="Sex",
+        col="lightblue",
+        ylim=c(0,300),
+        ylab="Number of passenger",)
+
+#create non-survival bar chart of sex with added parameters
+barplot(table(as.factor(notsurvive$Sex)),
+        main="Not-Survive Titanic Passenger",
+        xlab="Sex",
+        col="lightpink",
+        ylim=c(0,600),
+        ylab="Number of passenger",)
+
+#create survival histogram of age with added parameters
+hist(survived$Age,
+     main="Survived Titanic Passenger",
+     xlab="Age",
+     xlim=c(0,100),
+     col="darkblue",
+     ylim=c(0,100),
+     ylab="Number of passenger",)
+
+#create non-survival histogram of age with added parameters
+hist(notsurvive$Age,
+     main="Not-Survive Titanic Passenger",
+     xlab="Age",
+     xlim=c(0,100),
+     col="darkred",
+     ylim=c(0,150),
+     ylab="Number of passenger",)
+
+#Load ggplot2
+library(ggplot2)
+
+#compare all by sex
+ggplot(data=train, aes(Sex, fill = factor(Survived))) + 
+  geom_bar(stat = "count", position = "fill") + 
+  xlab("Sex") + 
+  scale_fill_discrete(name = "Survived") + ggtitle("Gender")
+
+#compare all by age using histogram
+ggplot(data=trainwithna, aes(Age, fill = factor(Survived))) + 
+  geom_histogram(
+    mapping = NULL,
+    data = NULL,
+    stat = "bin",
+    position = "stack",
+    binwidth = NULL,
+    bins = NULL,
+    na.rm = TRUE,
+    orientation = NA,
+    show.legend = NA,
+    inherit.aes = TRUE)+ 
+  ggtitle("Age")
+
+#compare all by age using freqpolygon
+ggplot(data=trainwithna, aes(Age, fill = factor(Survived))) + 
+geom_freqpoly(
+  mapping = NULL,
+  data = NULL,
+  stat = "bin",
+  position = "identity",
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE)+
+ggtitle("Frequency polygon of Passenger Age")
